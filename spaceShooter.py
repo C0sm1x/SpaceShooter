@@ -26,6 +26,9 @@ def player(playerX, playerY):
     #Drawing the player's ship to the screen
     gameDisplay.blit(spaceShip, (playerX, playerY))
     
+def bullet(bulletX, bulletY, bulletWidth, bulletHeight):
+    pygame.draw.rect(gameDisplay, white, (bulletX, bulletY, bulletWidth, bulletHeight))
+
 def gameloop():
     running = True
     
@@ -34,8 +37,16 @@ def gameloop():
     playerXVelocity = 0
     playerYVelocity = 0
     
+    bulletX = playerX
+    bulletY = playerY
+    bulletWidth = 10
+    bulletHeight = 2
+    
 
     while running:
+        # Setting screen color to black
+        gameDisplay.fill(black)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -48,11 +59,22 @@ def gameloop():
                     playerYVelocity = -4
                 elif event.key == pygame.K_DOWN:
                     playerYVelocity = 4
+
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     playerXVelocity = 0
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     playerYVelocity = 0
+                
+                if event.key == pygame.K_SPACE:
+                    fire = True
+                else:
+                    fire = False
+
+                if fire == True:
+                    bullet(bulletX, bulletY, bulletWidth, bulletHeight)
+                    bulletX += 4
+
         # Edge of sceen collision for the player
         if playerX <= 2:
             playerX = 2
@@ -66,13 +88,13 @@ def gameloop():
                 
         playerX += playerXVelocity
         playerY += playerYVelocity
-        # Setting screen color to black
-        gameDisplay.fill(black)
+          
         player(playerX, playerY)
-        # FPS clock.tick(60) 
-        clock.tick(60)
-        # Updating the display
+         # Updating the display
         pygame.display.update()
+         # FPS clock.tick(60) 
+        clock.tick(60)
+
 # Running the gameloop function
 gameloop()
 
