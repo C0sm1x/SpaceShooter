@@ -31,17 +31,23 @@ def bullet(bulletX, bulletY, bulletWidth, bulletHeight):
 
 def gameloop():
     running = True
-    
+    # The variables for the player 
     playerX = 200
     playerY = 200
     playerXVelocity = 0
     playerYVelocity = 0
-    
+    # The variables for the bullet 
     bulletX = playerX
     bulletY = playerY
     bulletWidth = 10
     bulletHeight = 2
+    bulletXVelocity = 0
     
+    # Boundery variables
+    topBoundery = 2
+    rightBoundery = 585
+    bottomBoundery = 425
+    leftBoundery = 2
 
     while running:
         # Setting screen color to black
@@ -72,23 +78,30 @@ def gameloop():
                     fire = False
 
                 if fire == True:
-                    bullet(bulletX, bulletY, bulletWidth, bulletHeight)
-                    bulletX += 4
+                    while bulletX < rightBoundery:
+                        bullet(bulletX, bulletY, bulletWidth, bulletHeight)
+                    fire = False
+                    bulletXVelocity = 4
+                    print bulletXVelocity
 
         # Edge of sceen collision for the player
-        if playerX <= 2:
-            playerX = 2
-        elif playerX >= 585:
-            playerX = 585
-        elif playerY <= 2:
-            playerY = 2
-        elif playerY >= 425:
-            playerY = 425
+        if playerX <= leftBoundery:
+            playerX = leftBoundery
+        elif playerX >= rightBoundery:
+            playerX = rightBoundery
+        elif playerY <= topBoundery:
+            playerY = topBoundery
+        elif playerY >= bottomBoundery:
+            playerY = bottomBoundery
 
-                
+        # Player movement        
         playerX += playerXVelocity
         playerY += playerYVelocity
-          
+
+        #Buller movement
+        bulletX += bulletXVelocity
+        
+        # Calling the player function which was defined above to draw the player
         player(playerX, playerY)
          # Updating the display
         pygame.display.update()
