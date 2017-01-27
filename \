@@ -42,7 +42,6 @@ def gameloop():
     bulletWidth = 10
     bulletHeight = 2
     bulletXVelocity = 0
-    playerFired = False
     
     # Boundery variables
     topBoundery = 2
@@ -67,15 +66,19 @@ def gameloop():
                 elif event.key == pygame.K_DOWN:
                     playerYVelocity = 4
                 if event.key == pygame.K_SPACE:
-                    playerFired = True
-                                
+                    fire = True
+                else:
+                    fire = False
+                
+    if fire == True:
+        bullet(bulletX, bulletY, bulletWidth, bulletHeight)
+
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     playerXVelocity = 0
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     playerYVelocity = 0
                 
-        
 
         # Edge of sceen collision for the player
         if playerX <= leftBoundery:
@@ -86,18 +89,7 @@ def gameloop():
             playerY = topBoundery
         elif playerY >= bottomBoundery:
             playerY = bottomBoundery
-        # What happens if playerFired is true
-        if playerFired == True:
-            # What to do if the bullet's x cordinate isn't equal to the right boundery
-            if bulletX != rightBoundery:
-                bullet(bulletX, bulletY, bulletWidth, bulletHeight)
-                bulletXVelocity = 6 
-            # What to d if the x cordinate of the bullet is greater than the right boundery
-            if bulletX >= rightBoundery:
-                # Sets the playerFired boolean back to false
-                playerFired = False
-                bulletY = playerY 
-                bulletX = playerX
+
         # Player movement        
         playerX += playerXVelocity
         playerY += playerYVelocity
