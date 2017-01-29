@@ -21,6 +21,7 @@ black = (0, 0, 0)
 clock = pygame.time.Clock()
 
 spaceShip = pygame.image.load("Sprites/Spaceship.png")
+enemyShip = pygame.image.load("Sprites/Red Spaceship.png")
 
 def player(playerX, playerY):
     #Drawing the player's ship to the screen
@@ -29,27 +30,34 @@ def player(playerX, playerY):
 def bullet(bulletX, bulletY, bulletWidth, bulletHeight):
     pygame.draw.rect(gameDisplay, white, (bulletX, bulletY, bulletWidth, bulletHeight))
 
+def enemy(enemyX, enemyY,):
+    gameDisplay.blit(enemyShip, (enemyX, enemyY))
+
 def gameloop():
     running = True
-    # The variables for the player 
-    playerX = 200
-    playerY = 200
-    playerXVelocity = 0
-    playerYVelocity = 0
-    # The variables for the bullet 
-    bulletX = playerX
-    bulletY = playerY
-    bulletWidth = 10
-    bulletHeight = 2
-    bulletXVelocity = 0
-    playerFired = False
-    
     # Boundery variables
     topBoundery = 2
     rightBoundery = 585
     bottomBoundery = 425
     leftBoundery = 2
 
+    # The variables for the player 
+    playerX = 200
+    playerY = 200
+    playerXVelocity = 0
+    playerYVelocity = 0
+    # Enemy variables
+    enemyX = rightBoundery + 80
+    enemyY = random.randint(topBoundery, bottomBoundery)
+
+    # The variables for the bullet 
+    bulletX = playerX - 5
+    bulletY = playerY + 10
+    bulletWidth = 10
+    bulletHeight = 2
+    bulletXVelocity = 0
+    playerFired = False
+    
     while running:
         # Setting screen color to black
         gameDisplay.fill(black)
@@ -96,8 +104,8 @@ def gameloop():
             if bulletX >= rightBoundery:
                 # Sets the playerFired boolean back to false
                 playerFired = False
-                bulletY = playerY 
-                bulletX = playerX
+                bulletX = playerX - 5
+                bulletY = playerY + 10
         # Player movement        
         playerX += playerXVelocity
         playerY += playerYVelocity
@@ -107,6 +115,16 @@ def gameloop():
         
         # Calling the player function which was defined above to draw the player
         player(playerX, playerY)
+        enemy(enemyX, enemyY)
+
+        if enemyX < leftBoundery or bulletY > enemyY and bulletY < enemyY + 100 and bulletX == enemyY:
+            enemyX = rightBoundery + 80
+            enemyY = random.randint(topBoundery, bottomBoundery)
+            enemy(enemyX, enemyY)
+ 
+
+
+        enemyX -= 2
          # Updating the display
         pygame.display.update()
          # FPS clock.tick(60) 
