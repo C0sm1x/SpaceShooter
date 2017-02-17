@@ -51,8 +51,8 @@ def gameloop():
     enemyY = random.randint(topBoundery, bottomBoundery)
 
     # The variables for the bullet 
-    bulletX = playerX - 5
-    bulletY = playerY + 10
+    bulletX = playerX 
+    bulletY = playerY
     bulletWidth = 10
     bulletHeight = 2
     bulletXVelocity = 0
@@ -104,8 +104,9 @@ def gameloop():
             if bulletX >= rightBoundery:
                 # Sets the playerFired boolean back to false
                 playerFired = False
-                bulletX = playerX - 5
-                bulletY = playerY + 10
+                bulletX = playerX
+                bulletY = playerY
+                bulletXVelocity = 0
         # Player movement        
         playerX += playerXVelocity
         playerY += playerYVelocity
