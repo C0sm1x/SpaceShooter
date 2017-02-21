@@ -1,4 +1,4 @@
-import pygame, random
+import pygame, random, os
 
 pygame.init()
 #Screen size varables
@@ -20,8 +20,10 @@ black = (0, 0, 0)
 
 clock = pygame.time.Clock()
 
-spaceShip = pygame.image.load("Sprites/Spaceship.png")
-enemyShip = pygame.image.load("Sprites/Red Spaceship.png")
+spaceShipDir = os.path.join("Sprites", "Spaceship.png")
+spaceShip = pygame.image.load(spaceShipDir)
+enemyShipDir = os.path.join("Sprites", "Red Spaceship.png")
+enemyShip = pygame.image.load(enemyShipDir)
 
 def player(playerX, playerY):
     #Drawing the player's ship to the screen
