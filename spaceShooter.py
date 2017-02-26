@@ -101,14 +101,15 @@ def gameloop():
             # What to do if the bullet's x cordinate isn't equal to the right boundery
             if bulletX != rightBoundery:
                 bullet(bulletX, bulletY, bulletWidth, bulletHeight)
-                bulletXVelocity = 6 
+                bulletXVelocity = 8 
             # What to d if the x cordinate of the bullet is greater than the right boundery
             if bulletX >= rightBoundery:
                 # Sets the playerFired boolean back to false
-                playerFired = False
                 bulletX = playerX
                 bulletY = playerY
                 bulletXVelocity = 0
+                playerFired = False
+
         # Player movement        
         playerX += playerXVelocity
         playerY += playerYVelocity
@@ -120,7 +121,7 @@ def gameloop():
         player(playerX, playerY)
         enemy(enemyX, enemyY)
 
-        if enemyX < leftBoundery or bulletY > enemyY and bulletY < enemyY + 100 and bulletX == enemyY:
+        if enemyX < leftBoundery or bulletY > enemyY and bulletY < enemyY + 100 and bulletX == enemyX:
             enemyX = rightBoundery + 80
             enemyY = random.randint(topBoundery, bottomBoundery)
             enemy(enemyX, enemyY)
