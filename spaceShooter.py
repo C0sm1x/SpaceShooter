@@ -37,6 +37,11 @@ def enemy(enemyX, enemyY,):
 
 def gameloop():
     running = True
+
+    # The "sprites" are both 54+56
+    spriteWidth = 54
+    spriteHeight = 56
+
     # Boundery variables
     topBoundery = 2
     rightBoundery = 585
@@ -48,39 +53,36 @@ def gameloop():
     playerY = 200
     playerXVelocity = 0
     playerYVelocity = 0
-
-    # The "sprites" are both 54+56
-    spriteWidth = 54
-    spriteHeight = 56
-
+ 
     # Enemy variables
     enemyX = rightBoundery + 80
     enemyY = random.randint(topBoundery, bottomBoundery)
 
     # The variables for the bullet 
     bulletX = playerX 
-    bulletY = playerY
+    bulletY = playerY + spriteHeight / 2
     bulletWidth = 10
-    bulletHeight = 2
+    bulletHeight = 4
     bulletXVelocity = 0
     playerFired = False
     
     while running:
         # Setting screen color to black
         gameDisplay.fill(black)
-
+        
+        # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
-                    playerXVelocity = 4
+                    playerXVelocity = 5
                 elif event.key == pygame.K_LEFT:
-                    playerXVelocity = -4
+                    playerXVelocity = -5
                 if event.key == pygame.K_UP:
-                    playerYVelocity = -4
+                    playerYVelocity = -5
                 elif event.key == pygame.K_DOWN:
-                    playerYVelocity = 4
+                    playerYVelocity = 5
                 if event.key == pygame.K_SPACE:
                     playerFired = True
                                 
@@ -102,38 +104,40 @@ def gameloop():
         elif playerY >= bottomBoundery:
             playerY = bottomBoundery
         # What happens if playerFired is true
+        if playerFired == False:
+            bulletX = playerX
+            bulletY = playerY + spriteHeight / 2
         if playerFired == True:
             # What to do if the bullet's x cordinate isn't equal to the right boundery
             if bulletX != rightBoundery:
                 bullet(bulletX, bulletY, bulletWidth, bulletHeight)
-                bulletXVelocity = 8 
+                bulletXVelocity = 10 
             # What to d if the x cordinate of the bullet is greater than the right boundery
             if bulletX >= rightBoundery:
                 # Sets the playerFired boolean back to false
-                bulletX = playerX
-                bulletY = playerY
                 bulletXVelocity = 0
                 playerFired = False
 
+            
         # Player movement        
         playerX += playerXVelocity
         playerY += playerYVelocity
 
         #Buller movement
         bulletX += bulletXVelocity
-        
+
         # Calling the player function which was defined above to draw the player
         player(playerX, playerY)
         enemy(enemyX, enemyY)
 
-        if enemyX < leftBoundery or bulletY < enemyY and bulletY > enemyY + spriteHeight and bulletX == enemyX:
+        if enemyX < leftBoundery or bulletY > enemyY and bulletY < enemyY + spriteHeight and bulletX > enemyX and bulletX < enemyX + spriteWidth:
             enemyX = rightBoundery + 80
             enemyY = random.randint(topBoundery, bottomBoundery)
             enemy(enemyX, enemyY)
  
 
 
-        enemyX -= 2
+        enemyX -= 4
          # Updating the display
         pygame.display.update()
          # FPS clock.tick(60) 
