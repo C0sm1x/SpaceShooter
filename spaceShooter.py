@@ -130,7 +130,8 @@ def gameloop():
         player(playerX, playerY)
         enemy(enemyX, enemyY)
 
-        if enemyX < leftBoundery or bulletY > enemyY and bulletY < enemyY + spriteHeight and bulletX > enemyX and bulletX < enemyX + spriteWidth:
+        if enemyX < leftBoundery or bulletY > enemyY and bulletY < enemyY + spriteHeight and bulletX > enemyX and bulletX < enemyX + spriteWidth and playerFired == True:
+            playerFired = False
             enemyX = rightBoundery + 80
             enemyY = random.randint(topBoundery, bottomBoundery)
             enemy(enemyX, enemyY)
