@@ -42,9 +42,14 @@ def bullet(bulletX, bulletY, bulletWidth, bulletHeight):
 def enemy(enemyX, enemyY,):
     gameDisplay.blit(enemyShip, (enemyX, enemyY))
 
+def titleScreen():
+    titleScreenFont = pygame.font.SysFont("None", 50)
+    pressEnter = titleScreenFont.render("Press Enter", True, (white))
+    gameDisplay.blit(pressEnter, (200, 100))
+
 def gameloop():
     running = True
-
+    onTitleScreen = True
     # The "sprites" are both 54+56
     spriteWidth = 54
     spriteHeight = 56
@@ -77,9 +82,20 @@ def gameloop():
     delay = 300
     soundCanPLay = False
     
+    while onTitleScreen:
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.mixer.quit()
+                pygame.quit()
+                quit()               
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    onTitleScreen = False
+        titleScreen()
+
     while running:
-        # Setting screen color to black
-        gameDisplay.fill(black)
         
         # Event handling
         for event in pygame.event.get():
@@ -109,8 +125,6 @@ def gameloop():
                     playerXVelocity = 0
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     playerYVelocity = 0
-                
-        
 
         # Edge of sceen collision for the player
         if playerX <= leftBoundery:
@@ -161,6 +175,10 @@ def gameloop():
  
         # Updating the display
         pygame.display.update()
+
+        # Setting screen color to black
+        gameDisplay.fill(black)
+
         # FPS clock.tick(60) 
         clock.tick(60)
 
