@@ -47,9 +47,20 @@ def titleScreen():
     pressEnter = titleScreenFont.render("Press Enter", True, (white))
     gameDisplay.blit(pressEnter, (200, 100))
 
+def gameOverScreen():
+    gameOverScreenFont = pygame.font.SysFont("None", 50)
+    gameOver = gameOverScreenFont.render("Game Over", True, (white))
+    gameDisplay.blit(gameOver, (200, 100))
+
+def keepingScore(score):
+    font = pygame.font.SysFont("none", 50)
+    score_Font_Render = font.render(str(score), True, white)
+    gameDisplay.blit(score_Font_Render, (300, 20))
+
 def gameloop():
     running = True
     onTitleScreen = True
+    onGameOverScreen = False
     # The "sprites" are both 54+56
     spriteWidth = 54
     spriteHeight = 56
@@ -81,6 +92,9 @@ def gameloop():
     #variables for the sound, and delay of when the sound can be played again
     delay = 300
     soundCanPLay = False
+
+    # Keeping score
+    score = 0
     
     while onTitleScreen:
         pygame.display.update()
@@ -94,6 +108,20 @@ def gameloop():
                 if event.key == pygame.K_RETURN:
                     onTitleScreen = False
         titleScreen()
+
+        
+    while onGameOverScreen:
+        pygame.display.update()
+        gameDisplay.fill(black)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.mixer.quit()
+                pygame.quit()
+                quit()               
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    onGameOverScreen = False               
 
     while running:
         
@@ -116,6 +144,7 @@ def gameloop():
                     while delay > 0:
                         soundCanPLay = True
                         fireSound.play()
+                        fireSound.set_volume(0.2)
                         delay = delay - 1
                         if delay < 0:
                             soundCanPlay = False
@@ -149,8 +178,8 @@ def gameloop():
                 bullet(bulletX, bulletY, bulletWidth, bulletHeight)
                 bulletXVelocity = 10 
 
-            # What to d if the x cordinate of the bullet is greater than the right boundery
-            if bulletX >= rightBoundery:
+            # What to do if the x cordinate of the bullet is greater than the right boundery
+            if bulletX >= rightBoundery + 100:
                 # Sets the playerFired boolean back to false
                 bulletXVelocity = 0
                 playerFired = False
@@ -166,13 +195,28 @@ def gameloop():
         # Calling the player function which was defined above to draw the player
         player(playerX, playerY)
         enemy(enemyX, enemyY)
-        # What happens if the enemy ship reaches the end of the screen, or gets hit by a bullet
-        if enemyX < leftBoundery or bulletY > enemyY and bulletY < enemyY + spriteHeight and bulletX > enemyX and bulletX < enemyX + spriteWidth and playerFired == True:
+        
+        # Calling the score function
+        keepingScore(score)
+
+        # What happens if the enemy ship reaches the end of the screen, or gets hit by a bullet 
+        if enemyX < leftBoundery - 100 : 
+            enemyX = rightBoundery + 100
+            enemyY = random.randint(topBoundery, bottomBoundery)
+
+        if bulletY > enemyY and bulletY < enemyY + spriteHeight and bulletX > enemyX and bulletX < enemyX + spriteWidth and playerFired == True:
             playerFired = False
             enemyX = rightBoundery + 100
             enemyY = random.randint(topBoundery, bottomBoundery)
-            enemy(enemyX, enemyY)
- 
+            enemy(enemyX, enemyY) 
+            score += 50
+
+
+        if enemyY > playerY and enemyY < playerY + spriteHeight and enemyX > playerX and enemyX < playerX + spriteWidth: 
+            gameOverScreen()
+            onGameOverScreen = True
+            
+
         # Updating the display
         pygame.display.update()
 
