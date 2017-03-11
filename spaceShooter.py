@@ -22,6 +22,7 @@ blue = (0, 255, 0)
 green = (0, 0, 255)
 white = (255, 255, 255)
 black = (0, 0, 0)
+grey = (100, 100, 100)
 
 clock = pygame.time.Clock()
 
@@ -49,8 +50,11 @@ def titleScreen():
 
 def gameOverScreen():
     gameOverScreenFont = pygame.font.SysFont("None", 50)
+    gameOverPressEnterFont = pygame.font.SysFont("None", 30)
     gameOver = gameOverScreenFont.render("Game Over", True, (white))
     gameDisplay.blit(gameOver, (200, 100))
+    gameOverPressEnter = gameOverPressEnterFont.render("Press Enter to continue", True, (grey))
+    gameDisplay.blit(gameOverPressEnter, (190, 220))
 
 def keepingScore(score):
     font = pygame.font.SysFont("none", 50)
@@ -66,9 +70,9 @@ def gameloop():
     spriteHeight = 56
 
     # Boundery variables
-    topBoundery = 2
+    topBoundery = 2 + 50
     rightBoundery = 585
-    bottomBoundery = 425
+    bottomBoundery = 425 - 50
     leftBoundery = 2
 
     # The variables for the player 
@@ -79,7 +83,7 @@ def gameloop():
  
     # Enemy variables
     enemyX = rightBoundery + 100
-    enemyY = random.randint(topBoundery, bottomBoundery)
+    enemyY = random.randint(topBoundery + 50, bottomBoundery - 50)
 
     # The variables for the bullet 
     bulletX = playerX 
@@ -98,20 +102,6 @@ def gameloop():
     
     while onTitleScreen:
         pygame.display.update()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.mixer.quit()
-                pygame.quit()
-                quit()               
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    onTitleScreen = False
-        titleScreen()
-
-        
-    while onGameOverScreen:
-        pygame.display.update()
         gameDisplay.fill(black)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -121,7 +111,8 @@ def gameloop():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    onGameOverScreen = False               
+                    onTitleScreen = False
+        titleScreen() 
 
     while running:
         
@@ -164,6 +155,21 @@ def gameloop():
             playerY = topBoundery
         elif playerY >= bottomBoundery:
             playerY = bottomBoundery
+        
+        # corner collisions
+        if playerX <= leftBoundery and playerY >= bottomBoundery:
+            playerX = leftBoundery
+            playerY = bottomBoundery
+        elif playerX >= rightBoundery and playerY >= bottomBoundery:
+            playerX = rightBoundery
+            playerY = bottomBoundery
+        elif playerY <= topBoundery and playerX <= leftBoundery:
+            playerY = topBoundery
+            playerX = leftBoundery
+        elif playerY <= topBoundery and playerX >= rightBoundery:
+            playerX = rightBoundery
+            playerY = topBoundery
+
         # What happens if playerFired is true
         if playerFired == False:
             bulletX = playerX
@@ -212,10 +218,24 @@ def gameloop():
             score += 50
 
 
-        if enemyY > playerY and enemyY < playerY + spriteHeight and enemyX > playerX and enemyX < playerX + spriteWidth: 
-            gameOverScreen()
+        if enemyY > playerY and enemyY <= playerY + spriteHeight and enemyX > playerX and enemyX < playerX + spriteWidth or enemyY < playerY and enemyY >= playerY - spriteHeight and enemyX > playerX and enemyX < playerX + spriteWidth: 
             onGameOverScreen = True
-            
+            # Displaying the game over screen
+            while onGameOverScreen:
+                pygame.display.update()
+                gameDisplay.fill(black)
+                gameOverScreen()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.mixer.quit()
+                        pygame.quit()
+                        quit()               
+
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_RETURN:
+                            onGameOverScreen = False               
+                            gameloop()
+
 
         # Updating the display
         pygame.display.update()
