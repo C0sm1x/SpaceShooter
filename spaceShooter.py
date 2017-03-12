@@ -236,6 +236,15 @@ def gameloop():
                             onGameOverScreen = False               
                             gameloop()
 
+        # The enemy ship fallows the Y-cordinate of the player        
+        if enemyX < rightBoundery and enemyY > playerY:
+            enemyY -= 2
+            if enemyY == playerY:
+                enemyY += 0
+        if enemyX < rightBoundery and enemyY < playerY:
+            enemyY += 2
+            if enemyY == playerY:
+                enemyY += 0
 
         # Updating the display
         pygame.display.update()
